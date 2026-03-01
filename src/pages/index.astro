@@ -1,4 +1,8 @@
 ---
+import Footer from "../components/Footer.astro";
+import Grid from "../components/Grid.astro";
+import Hero from "../components/Hero.astro";
+
 
 ---
 
@@ -9,9 +13,18 @@
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
+		<title>Ingamana :RE</title>
 	</head>
 	<body>
-		<h1>Astro</h1>
+		<Hero/>
+		<Grid/>
+		<Footer/>
 	</body>
 </html>
+
+<style>
+	* {
+		box-sizing: border-box;
+		margin: 0;
+	}
+</style>

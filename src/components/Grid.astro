@@ -1,0 +1,131 @@
+---
+const cards = [
+  {
+    image: '/01.avif',
+  },
+  {
+    image: '/02.avif',
+  },
+  {
+    image: '/03.avif',
+  },
+  {
+    image: '/04.avif',
+  },
+  {
+    image: '/05.avif',
+  },
+  {
+    image: '/06.avif',
+  },
+  {
+    image: '/07.avif',
+  },
+  {
+    image: '/08.avif',
+  },
+  {
+    image: '/09.avif',
+  },
+  {
+    image: '/10.avif',
+  },
+  {
+    image: '/11.avif',
+  },
+  {
+    image: '/12.avif',
+  },
+  {
+    image: '/13.avif',
+  },
+  {
+    image: '/14.avif',
+  },
+];
+
+// Функция для получения случайных неповторяющихся карт (кроме указанной)
+function getRandomCards(excludeIndex: number, count: number) {
+  // Создаем массив индексов всех карт кроме исключенной
+  const availableIndices = Array.from({ length: cards.length }, (_, i) => i)
+    .filter(i => i !== excludeIndex);
+  
+  // Перемешиваем массив индексов
+  for (let i = availableIndices.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [availableIndices[i], availableIndices[j]] = [availableIndices[j], availableIndices[i]];
+  }
+  
+  // Берем первые count индексов и возвращаем соответствующие карты
+  return availableIndices.slice(0, count).map(index => cards[index]);
+}
+
+// Генерируем все строки заранее (для серверного рендеринга)
+const rows = cards.map((mainCard, mainIndex) => {
+  const otherCards = getRandomCards(mainIndex, 8);
+  return [mainCard, ...otherCards];
+});
+---
+
+<div class="rows-container">
+  {rows.map((row, rowIndex) => (
+    <div class="row">
+      {row.map((card, cardIndex) => (
+        <div class={`card ${cardIndex === 0 ? 'first' : ''}`} style={`order: ${cardIndex === 0 ? '5' : cardIndex}`}>
+          <img src={card.image} alt="" />
+        </div>
+      ))}
+    </div>
+  ))}
+</div>
+
+<style>
+  .rows-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    overflow: clip;
+    height: 300px;
+    animation: sizing 1s both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 200%;
+
+    @media (width < 640px) {
+      --start-h: 75px;
+      --end-h: 50vh;
+    }
+  }
+  
+  .card {
+    flex-shrink: 0;
+    flex-grow: 1;
+    position: relative;
+    aspect-ratio: 16/9;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  
+  .card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  @keyframes sizing {
+    from {
+      height: var(--start-h, 300px);
+    }
+
+    to {
+      height: var(--end-h, 90vh);
+    }
+  }
+
+  
+</style>
